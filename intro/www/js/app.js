@@ -64,10 +64,10 @@ angular.module('starter', ['ionic', 'ngCordova'])
         items.splice(items.indexOf(completedItem), 1);
       },
       getItem: function(itemId) {
-        for(var i=0; i<items.length; i++)
-        if (items[i].id === parseInt(itemId)) {
-          return items[i];
-        }
+        for (var i = 0; i < items.length; i++)
+          if (items[i].id === parseInt(itemId)) {
+            return items[i];
+          }
         return null
       }
     }
@@ -85,30 +85,32 @@ angular.module('starter', ['ionic', 'ngCordova'])
     item.currentItem = MyService.getItem($stateParams.itemId);
 
   })
-  .controller('NewItemCtrl', function(MyService, $ionicHistory, $ionicPlatform) {
-    this.addNewItem = function(newItem) {
+  .controller('NewItemCtrl', function(MyService, $ionicHistory, $ionicPlatform, $cordovaCamera) {
+    var newitem = this;
+    newitem.addNewItem = function(newItem) {
       MyService.newItem(newItem);
       $ionicHistory.goBack();
     }
-      this.img = '';
-    $ionicPlatform.ready(function(){
-    var options = {
-       quality: 100,
-       destinationType: Camera.DestinationType.DATA_URL,
-       sourceType: Camera.PictureSourceType.CAMERA,
-       allowEdit: true,
-       encodingType: Camera.EncodingType.JPEG,
-       targetWidth: 200,
-       targetHeight: 200,
-       popoverOptions: CameraPopoverOptions,
-       saveToPhotoAlbum: true,
-       correctOrientation:true
-     };
-     $cordovaCamera.getPicture(options).then(function(imageData) {
-       this.img = "data:image/jpeg;base64," + imageData;
-     }, function(err) {
-     // error
-   });
-
+    newitem.img = '';
+    $ionicPlatform.ready(function() {
+      newitem.takePicture = function() {
+        var options = {
+          quality: 100,
+          destinationType: Camera.DestinationType.DATA_URL,
+          sourceType: Camera.PictureSourceType.CAMERA,
+          encodingType: Camera.EncodingType.JPEG,
+          allowEdit: true,
+          targetWidth: 200,
+          targetHeight: 200,
+          saveToPhotoAlbum: true,
+          correctOrientation: true
+        };
+        $cordovaCamera.getPicture(options).then(function(imageData) {
+          newitem.img = "data:image/jpeg;base64," + imageData;
+        }, function(err) {
+          console.log(err);
+          alert("You're on laptop silly");
+        });
+      }
     })
   })
