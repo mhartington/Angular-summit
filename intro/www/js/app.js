@@ -16,29 +16,40 @@ angular.module('starter', ['ionic'])
       }
     });
   })
-  .config(function($stateProvider, $urlRouterProvider){
-      $stateProvider
+  .config(function($stateProvider, $urlRouterProvider) {
+    $stateProvider
 
       .state('master', {
-        url: '/',
-        templateUrl: 'templates/master.html',
-        controller: 'MyCtrl as master'
-      })
+      url: '/',
+      templateUrl: 'templates/master.html',
+      controller: 'MyCtrl as master'
+    })
 
-      .state('newItem', {
+    .state('newItem', {
         url: '/new',
         templateUrl: 'templates/newitem.html',
         controller: 'NewItemCtrl as newitem'
+      })
+      .state('itemDetail', {
+        url: '/detail/:itemId',
+        templateUrl: 'templates/itemdetail.html',
+        controller: 'ItemCtrl as item'
       });
-      $urlRouterProvider.otherwise('/');
+
+    $urlRouterProvider.otherwise('/');
 
   })
   .service('MyService', function() {
-    var items = [
-      {name: 'item1'},
-      {name: 'item2'},
-      {name: 'item3'}
-    ];
+    var items = [{
+      name: 'item1',
+      id : 0
+    }, {
+      name: 'item2',
+      id : 2
+    }, {
+      name: 'item3',
+      id : 2
+    }];
     return {
       all: function() {
         return items
@@ -47,18 +58,32 @@ angular.module('starter', ['ionic'])
         items.unshift({
           name: newItem
         })
+      },
+      remove: function(completedItem) {
+        items.splice(items.indexOf(completedItem), 1);
+      },
+      getItem: function(itemId){
+        return items[itemId]
       }
-
     }
-
   })
   .controller('MyCtrl', function(MyService) {
     var master = this;
     master.items = MyService.all();
-  })
-  .controller('NewItemCtrl', function(MyService){
-    this.addNewItem = function(newItem){
-      MyService.newItem(newItem)
+    master.remove = function(completedItem) {
+      MyService.remove(completedItem);
     }
   })
-//this.todos.splice(this.todos.indexOf(todo), 1);
+
+  .controller('ItemCtrl', function(MyService, $stateParams){
+      var item = this;
+      item.currentItem = MyService.getItem($stateParams.itemId);
+
+  })
+  .controller('NewItemCtrl', function(MyService, $ionicHistory) {
+    this.addNewItem = function(newItem) {
+      MyService.newItem(newItem);
+      $ionicHistory.goBack();
+    }
+  })
+  //this.todos.splice(this.todos.indexOf(todo), 1);

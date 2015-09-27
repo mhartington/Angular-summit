@@ -4,9 +4,9 @@
   </ion-nav-buttons>
   <ion-content>
     <ion-list>
-      <ion-item ng-repeat="item in master.items">
+      <ion-item  href="#/detail/{{item.id}}" class="item-remove-animate" ng-repeat="item in master.items">
         {{item.name}}
-        <ion-option-button class="button-assertive">
+        <ion-option-button ng-click="master.remove(item)" class="button-assertive">
           Delete
         </ion-option-button>
       </ion-item>
