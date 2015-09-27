@@ -2,7 +2,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic'])
+angular.module('starter', ['ionic', 'ngCordova'])
 
 .run(function($ionicPlatform) {
     $ionicPlatform.ready(function() {
@@ -56,7 +56,8 @@ angular.module('starter', ['ionic'])
       },
       newItem: function(newItem) {
         items.unshift({
-          name: newItem
+          name: newItem,
+          id: items.length + 1
         })
       },
       remove: function(completedItem) {
@@ -84,10 +85,30 @@ angular.module('starter', ['ionic'])
     item.currentItem = MyService.getItem($stateParams.itemId);
 
   })
-  .controller('NewItemCtrl', function(MyService, $ionicHistory) {
+  .controller('NewItemCtrl', function(MyService, $ionicHistory, $ionicPlatform) {
     this.addNewItem = function(newItem) {
       MyService.newItem(newItem);
       $ionicHistory.goBack();
     }
+      this.img = '';
+    $ionicPlatform.ready(function(){
+    var options = {
+       quality: 100,
+       destinationType: Camera.DestinationType.DATA_URL,
+       sourceType: Camera.PictureSourceType.CAMERA,
+       allowEdit: true,
+       encodingType: Camera.EncodingType.JPEG,
+       targetWidth: 200,
+       targetHeight: 200,
+       popoverOptions: CameraPopoverOptions,
+       saveToPhotoAlbum: true,
+       correctOrientation:true
+     };
+     $cordovaCamera.getPicture(options).then(function(imageData) {
+       this.img = "data:image/jpeg;base64," + imageData;
+     }, function(err) {
+     // error
+   });
+
+    })
   })
-  //this.todos.splice(this.todos.indexOf(todo), 1);
