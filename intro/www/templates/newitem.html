@@ -4,9 +4,11 @@
       <label class="item item-input">
         <input ng-model="newitem.newItem" placeholder="New Item" type="text">
       </label>
-      <img ng-src="newitem.img" ng-if="newitem.img" />
       <button class="button button-block" type="submit"></button>
     </form>
-    <a class="button button-icon ion-camera" ng-click="newitem.takePicture()">Take Picture</a>
+    <a class="button" ng-click="newitem.getLocation()"></a>
+    <p>
+      {{newitem.lat}}, {{newitem.long}}
+    </p>
   </ion-content>
 </ion-view>

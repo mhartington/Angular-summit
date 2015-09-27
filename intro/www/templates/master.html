@@ -4,7 +4,7 @@
   </ion-nav-buttons>
   <ion-content>
     <ion-list>
-      <ion-item  href="#/detail/{{item.id}}" class="item-remove-animate" ng-repeat="item in master.items">
+      <ion-item on-swipe-left="master.test()" href="#/detail/{{item.id}}" class="item-remove-animate" ng-repeat="item in master.items">
         {{item.name}}
         <ion-option-button ng-click="master.remove(item)" class="button-assertive">
           Delete

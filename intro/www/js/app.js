@@ -74,6 +74,9 @@ angular.module('starter', ['ionic', 'ngCordova'])
   })
   .controller('MyCtrl', function(MyService) {
     var master = this;
+    master.test = function(){
+      alert('you swiped');
+    }
     master.items = MyService.all();
     master.remove = function(completedItem) {
       MyService.remove(completedItem);
@@ -85,32 +88,25 @@ angular.module('starter', ['ionic', 'ngCordova'])
     item.currentItem = MyService.getItem($stateParams.itemId);
 
   })
-  .controller('NewItemCtrl', function(MyService, $ionicHistory, $ionicPlatform, $cordovaCamera) {
+  .controller('NewItemCtrl', function(MyService, $ionicHistory, $ionicPlatform, $cordovaGeolocation) {
     var newitem = this;
-    newitem.addNewItem = function(newItem) {
-      MyService.newItem(newItem);
+    newitem.addNewItem = function(newItem, newImg) {
+      MyService.newItem(newItem, newImg);
       $ionicHistory.goBack();
     }
-    newitem.img = '';
+    newitem.lat = '';
+    newitem.long = '';
     $ionicPlatform.ready(function() {
-      newitem.takePicture = function() {
-        var options = {
-          quality: 100,
-          destinationType: Camera.DestinationType.DATA_URL,
-          sourceType: Camera.PictureSourceType.CAMERA,
-          encodingType: Camera.EncodingType.JPEG,
-          allowEdit: true,
-          targetWidth: 200,
-          targetHeight: 200,
-          saveToPhotoAlbum: true,
-          correctOrientation: true
-        };
-        $cordovaCamera.getPicture(options).then(function(imageData) {
-          newitem.img = "data:image/jpeg;base64," + imageData;
-        }, function(err) {
-          console.log(err);
-          alert("You're on laptop silly");
-        });
-      }
+        newitem.getLocation = function(){
+          var posOptions = {timeout: 10000, enableHighAccuracy: false};
+          $cordovaGeolocation
+          .getCurrentPosition(posOptions)
+          .then(function (position) {
+            newitem.lat  = position.coords.latitude
+            newitem.long = position.coords.longitude
+          }, function(err) {
+            console.log(err);
+          });
+        }
     })
   })
