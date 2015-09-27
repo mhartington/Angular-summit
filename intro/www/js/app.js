@@ -42,13 +42,13 @@ angular.module('starter', ['ionic'])
   .service('MyService', function() {
     var items = [{
       name: 'item1',
-      id : 0
+      id: 0
     }, {
       name: 'item2',
-      id : 2
+      id: 1
     }, {
       name: 'item3',
-      id : 2
+      id: 2
     }];
     return {
       all: function() {
@@ -62,8 +62,12 @@ angular.module('starter', ['ionic'])
       remove: function(completedItem) {
         items.splice(items.indexOf(completedItem), 1);
       },
-      getItem: function(itemId){
-        return items[itemId]
+      getItem: function(itemId) {
+        for(var i=0; i<items.length; i++)
+        if (items[i].id === parseInt(itemId)) {
+          return items[i];
+        }
+        return null
       }
     }
   })
@@ -75,9 +79,9 @@ angular.module('starter', ['ionic'])
     }
   })
 
-  .controller('ItemCtrl', function(MyService, $stateParams){
-      var item = this;
-      item.currentItem = MyService.getItem($stateParams.itemId);
+.controller('ItemCtrl', function(MyService, $stateParams) {
+    var item = this;
+    item.currentItem = MyService.getItem($stateParams.itemId);
 
   })
   .controller('NewItemCtrl', function(MyService, $ionicHistory) {
